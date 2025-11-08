@@ -1,0 +1,360 @@
+{
+  "info": {
+    "name": "Smart Health API",
+    "description": "API endpoints for Smart AI Health Prediction App",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('token', response.data.token);",
+                  "    pm.collectionVariables.set('userId', response.data.user._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Elder\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"age\": 68,\n  \"gender\": \"Male\",\n  \"phone\": \"+1234567890\",\n  \"role\": \"elder\",\n  \"emergencyContacts\": [\n    {\n      \"name\": \"Sarah Elder\",\n      \"phone\": \"+1234567891\",\n      \"email\": \"sarah@example.com\",\n      \"relation\": \"Daughter\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('token', response.data.token);",
+                  "    pm.collectionVariables.set('userId', response.data.user._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Readings",
+      "item": [
+        {
+          "name": "Add Normal Reading",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bp\": {\n    \"systolic\": 120,\n    \"diastolic\": 80\n  },\n  \"heartRate\": 75,\n  \"sugar\": 100,\n  \"sleepHours\": 7,\n  \"weight\": 70,\n  \"symptoms\": [],\n  \"notes\": \"Feeling good today\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/readings/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "readings", "add"]
+            }
+          }
+        },
+        {
+          "name": "Add Warning Reading (High BP)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bp\": {\n    \"systolic\": 145,\n    \"diastolic\": 92\n  },\n  \"heartRate\": 85,\n  \"sugar\": 110,\n  \"sleepHours\": 6,\n  \"weight\": 72,\n  \"symptoms\": [\"mild headache\"],\n  \"notes\": \"Felt a bit dizzy\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/readings/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "readings", "add"]
+            }
+          }
+        },
+        {
+          "name": "Add Danger Reading (Critical)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bp\": {\n    \"systolic\": 165,\n    \"diastolic\": 105\n  },\n  \"heartRate\": 110,\n  \"sugar\": 190,\n  \"sleepHours\": 4,\n  \"weight\": 75,\n  \"symptoms\": [\"headache\", \"dizziness\", \"chest discomfort\"],\n  \"notes\": \"Not feeling well\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/readings/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "readings", "add"]
+            }
+          }
+        },
+        {
+          "name": "Get User Readings",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/readings/user/{{userId}}?limit=10&page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "readings", "user", "{{userId}}"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Latest Reading",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/readings/user/{{userId}}/latest",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "readings", "user", "{{userId}}", "latest"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Alerts",
+      "item": [
+        {
+          "name": "Get User Alerts",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/alerts/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "alerts", "user", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Unread Alerts",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/alerts/user/{{userId}}?isRead=false",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "alerts", "user", "{{userId}}"],
+              "query": [
+                {
+                  "key": "isRead",
+                  "value": "false"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Danger Alerts",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/alerts/user/{{userId}}?severity=danger",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "alerts", "user", "{{userId}}"],
+              "query": [
+                {
+                  "key": "severity",
+                  "value": "danger"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
