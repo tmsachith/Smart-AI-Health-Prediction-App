@@ -211,6 +211,22 @@ export default function HomeScreen() {
               <Text style={styles.actionIcon}>🔔</Text>
               <Text style={styles.actionText}>Alerts</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.actionCard}
+              onPress={() => router.push('/upload-report')}
+            >
+              <Text style={styles.actionIcon}>📄</Text>
+              <Text style={styles.actionText}>Upload Report</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.actionCard}
+              onPress={() => router.push('/reports')}
+            >
+              <Text style={styles.actionIcon}>📋</Text>
+              <Text style={styles.actionText}>My Reports</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -382,10 +398,11 @@ const styles = StyleSheet.create({
   },
   actionsGrid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 12,
   },
   actionCard: {
-    flex: 1,
+    width: '48%',
     backgroundColor: 'white',
     borderRadius: 16,
     padding: 24,

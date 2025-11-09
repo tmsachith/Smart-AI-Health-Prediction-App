@@ -7,6 +7,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const readingRoutes = require('./routes/readingRoutes');
 const alertRoutes = require('./routes/alertRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 // Initialize express app
 const app = express();
@@ -35,6 +36,7 @@ app.get('/', (req, res) => {
       auth: '/api/auth',
       readings: '/api/readings',
       alerts: '/api/alerts',
+      reports: '/api/reports',
     },
   });
 });
@@ -43,6 +45,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/readings', readingRoutes);
 app.use('/api/alerts', alertRoutes);
+app.use('/api/reports', reportRoutes);
 
 // 404 handler
 app.use((req, res) => {
@@ -69,11 +72,12 @@ app.use((err, req, res, next) => {
 
 // Start server
 const PORT = process.env.PORT || 5000;
+const HOST = '0.0.0.0'; // Listen on all network interfaces
 
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
   console.log('\n🚀 ========================================');
   console.log(`🏥 Smart AI Health Prediction API`);
-  console.log(`🌍 Server running on port ${PORT}`);
+  console.log(`🌍 Server running on ${HOST}:${PORT}`);
   console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`⏰ Started at: ${new Date().toLocaleString()}`);
   console.log('========================================\n');
@@ -82,6 +86,9 @@ app.listen(PORT, () => {
   console.log(`   - Auth: http://localhost:${PORT}/api/auth`);
   console.log(`   - Readings: http://localhost:${PORT}/api/readings`);
   console.log(`   - Alerts: http://localhost:${PORT}/api/alerts`);
+  console.log(`   - Reports: http://localhost:${PORT}/api/reports`);
+  console.log(`\n📱 Android Emulator: http://10.0.2.2:${PORT}/api`);
+  console.log(`📱 Physical Device: http://192.168.8.101:${PORT}/api`);
   console.log('\n========================================\n');
 });
 

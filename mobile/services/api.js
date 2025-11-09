@@ -5,12 +5,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // For Android Emulator use: http://10.0.2.2:5000/api
 // For iOS Simulator use: http://localhost:5000/api
 // For Physical Device use your computer's IP: http://192.168.x.x:5000/api
-const API_URL = 'http://10.0.2.2:5000/api'; // Change this based on your setup
+
+// IMPORTANT: Since Expo is using 192.168.8.101, use the same IP for backend
+const API_URL = 'http://192.168.8.101:5000/api'; // Updated to match Expo URL
+
+console.log('🔗 API Base URL:', API_URL);
 
 // Create axios instance
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 10000,
+  timeout: 30000, // Increased to 30 seconds
   headers: {
     'Content-Type': 'application/json',
   },
@@ -70,6 +74,54 @@ export const alertsAPI = {
   markAsRead: (alertId) => api.put(`/alerts/${alertId}/read`),
   acknowledgeAlert: (alertId) => api.put(`/alerts/${alertId}/acknowledge`),
   markAllAsRead: (userId) => api.put(`/alerts/user/${userId}/read-all`),
+};
+
+// Reports API
+export const reportsAPI = {
+  uploadReport: async (formData) => {
+    try {
+      // Get token from AsyncStorage first
+      const token = await AsyncStorage.getItem('userToken');
+      
+      console.log('📤 Uploading report...');
+      console.log('🔑 Token exists:', !!token);
+      console.log('🌐 Upload URL:', `${API_URL}/reports/upload`);
+      
+      if (!token) {
+        throw new Error('No authentication token found. Please login again.');
+      }
+
+      // Create axios request with token
+      const response = await axios({
+        method: 'POST',
+        url: `${API_URL}/reports/upload`,
+        data: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,
+        },
+        timeout: 120000, // 2 minutes for file upload
+      });
+
+      console.log('✅ Upload successful:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Upload API Error Details:');
+      console.error('  - Message:', error.message);
+      console.error('  - Response Status:', error.response?.status);
+      console.error('  - Response Data:', error.response?.data);
+      console.error('  - Request URL:', error.config?.url);
+      throw error;
+    }
+  },
+  
+  getUserReports: (params = {}) => api.get('/reports', { params }),
+  
+  getReportById: (reportId) => api.get(`/reports/${reportId}`),
+  
+  deleteReport: (reportId) => api.delete(`/reports/${reportId}`),
+  
+  getReportStats: () => api.get('/reports/stats'),
 };
 
 export default api;

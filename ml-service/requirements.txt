@@ -1,0 +1,22 @@
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+python-multipart==0.0.18
+pydantic==2.10.3
+requests==2.32.3
+
+# OCR Libraries
+pytesseract==0.3.13
+easyocr==1.7.2
+Pillow==11.0.0
+
+# PDF Processing
+pdfplumber==0.11.4
+PyPDF2==3.0.1
+
+# Image Processing
+opencv-python==4.10.0.84
+numpy>=1.24.0,<2.1.0
+
+# ML/AI (optional for future enhancements)
+scikit-learn==1.5.2
+pandas==2.2.3
